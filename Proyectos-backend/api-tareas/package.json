@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
+  
   "scripts": {
     "tsc": "tsc",
     "dev": "ts-node-dev src/index.ts",
+    "build": "tsc",
     "start": "node build/index.js",
     "lint": "ts-standard"
   },

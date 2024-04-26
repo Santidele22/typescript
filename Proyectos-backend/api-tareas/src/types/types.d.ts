@@ -1,7 +1,7 @@
 export interface Task {
   id: number
   author: string
-  date: Date
+  date: string
   task: string
   done: boolean
 }

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { TaskController } from '../controllers/taskControllers'
 const task = Router()
-// Instancio la
+
 const controller = new TaskController()
 
 task.get('/', controller.getAll)

@@ -1,46 +1,38 @@
-import task from '../data/data.json'
-import { Task } from '../types/types'
+import { Request, Response } from 'express'
+import { TaskModel } from '../models/localHost/taskLocalModels'
 
-const data: Task = task as Task
+const taskModel = new TaskModel()
 
 export class TaskController {
-  public async getAll (req: Request, res: Response): void {
+  public getAll (req: Request, res: Response): void {
     try {
+      const { name } = req.query
 
+      if (typeof name === 'string') {
+        const task = taskModel.getAllTask(name)
+        if (task !== null) {
+          res.json(task)
+        }
+      }
+      res.status(404).json({ Error: 'No se encontro ninguna tarea' })
     } catch (error) {
-
+      res.status(500).json({ Error: error })
     }
   }
 
-  public async getOne (): void {
-    try {
+  public getOne (): void {
 
-    } catch (error) {
-
-    }
   }
 
-  public async delete (): void {
-    try {
+  public delete (): void {
 
-    } catch (error) {
-
-    }
   }
 
-  public async create (): void {
-    try {
+  public create (): void {
 
-    } catch (error) {
-
-    }
   }
 
-  public async update (): void {
-    try {
+  public update (): void {
 
-    } catch (error) {
-
-    }
   }
 }
