@@ -5,3 +5,4 @@ export interface Task {
   task: string
   done: boolean
 }
+export type NewTask = Omit<Task, 'id'>

@@ -1,26 +1,63 @@
 import taskInfo from '../../data/data.json'
-import { Task } from '../../types/types'
-
+import { NewTask, Task } from '../../types/types'
 const data: Task[] = taskInfo as Task[]
 export class TaskModel {
-  public getAllTask (name: string): Task[] | undefined {
+  public getAllTask (): Task[] | undefined {
     try {
-      if (name.length < 0) {
-        return data.filter(task => task.author === name)
+      if (data !== null) {
+        return data
       }
-      console.log(data)
-      return data
+      throw new Error('No se encontro ninguna tarea')
     } catch (error: unknown) {
       const errorMessage: string = error as string
       throw new Error(errorMessage)
     }
   }
 
-  public getOneTask (): void {
+  public getTaskByName (name: string): Task[] | undefined {
+    try {
+      const task: Task[] = data.filter(task => task.author.toLowerCase().includes(name.toLowerCase()))
 
+      return task
+    } catch (error) {
+      const errorMessage: string = error as string
+      throw new Error(errorMessage)
+    }
   }
 
-  public deleteTask (): void {}
+  public getTaskById (id: number): Task | undefined {
+    try {
+      const task = data.find(task => task.id === id)
+
+      return task
+    } catch (error) {
+      const errorMessage: string = error as string
+      throw new Error(errorMessage)
+    }
+  }
+
+  public deleteTask (id: number): Task[] | undefined {
+    try {
+      const index = data.findIndex(task => task.id === id)
+      let deletedTask
+      if (index !== -1) {
+        deletedTask = data.splice(index, 1)
+      }
+      return deletedTask
+    } catch (error) {
+      const errorMessage: string = error as string
+      throw new Error(errorMessage)
+    }
+  }
+
+  public createTask (newTaskEntry: NewTask): Task {
+    const newTask: Task = {
+      id: Math.max(...data.map(d => d.id)) + 1,
+      ...newTaskEntry
+    }
+    data.push(newTask)
+    return newTask
+  }
+
   public updateTask (): void {}
-  public createTask (): void {}
 }
