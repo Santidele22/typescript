@@ -1,12 +1,15 @@
-import { Request, Response } from 'express'
-import { TaskModel } from '../models/localHost/taskLocalModels'
-import task from '../routes/task'
-import { validatePartialtask, validateTask } from '../validation/taskValidation'
-
-const taskModel = new TaskModel()
-
-export class TaskController {
-  public getAll (_req: Request, res: Response): void {
+'use strict'
+const __importDefault = (this && this.__importDefault) || function (mod) {
+  return (mod && mod.__esModule) ? mod : { default: mod }
+}
+Object.defineProperty(exports, '__esModule', { value: true })
+exports.TaskController = void 0
+const taskLocalModels_1 = require('../models/localHost/taskLocalModels')
+const task_1 = __importDefault(require('../routes/task'))
+const taskValidation_1 = require('../validation/taskValidation')
+const taskModel = new taskLocalModels_1.TaskModel()
+class TaskController {
+  getAll (_req, res) {
     try {
       const task = taskModel.getAllTask()
       if (task !== null) {
@@ -19,7 +22,7 @@ export class TaskController {
     }
   }
 
-  public getByName (req: Request, res: Response): void {
+  getByName (req, res) {
     try {
       const { author } = req.query
       if (typeof author === 'string') {
@@ -34,7 +37,7 @@ export class TaskController {
     }
   }
 
-  public getById (req: Request, res: Response): void {
+  getById (req, res) {
     try {
       const id = +req.params.id
       const task = taskModel.getTaskById(id)
@@ -48,11 +51,11 @@ export class TaskController {
     }
   }
 
-  public delete (req: Request, res: Response): void {
+  delete (req, res) {
     try {
       const id = +req.params.id
       const taskDeleted = taskModel.deleteTask(id)
-      if (task === undefined) {
+      if (task_1.default === undefined) {
         res.status(404).json({ Error: 'No se encontro la tarea' })
         return
       }
@@ -62,32 +65,21 @@ export class TaskController {
     }
   }
 
-  public create (req: Request, res: Response): void {
+  create (req, res) {
     try {
-      const taskEntry = validateTask(req.body)
+      const taskEntry = (0, taskValidation_1.validateTask)(req.body)
       if (taskEntry.success !== true) {
         res.status(400).json({ Error: taskEntry.error })
         return
       }
       const newTask = taskModel.createTask(taskEntry)
       res.status(201).json({ Message: 'Tarea creada con exito', Objeto: newTask })
-    } catch (error: any) {
-      res.status(500).json({ Error: error })
-    }
-  }
-
-  public update (req: Request, res: Response): void {
-    try {
-      const id = +req.params.id
-      const validateTask = validatePartialtask(req.body)
-      if (validateTask.success !== true) {
-        res.status(400).json({ Error: validateTask.error })
-        return
-      }
-      const updateTask = taskModel.updateTask(id, validateTask.data)
-      res.status(201).json({ Message: 'Tarea actualizada con exito', NuevoOjeto: updateTask })
     } catch (error) {
       res.status(500).json({ Error: error })
     }
   }
+
+  update () {
+  }
 }
+exports.TaskController = TaskController

@@ -1,6 +1,8 @@
 import taskInfo from '../../data/data.json'
 import { NewTask, Task } from '../../types/types'
+
 const data: Task[] = taskInfo as Task[]
+
 export class TaskModel {
   public getAllTask (): Task[] | undefined {
     try {
@@ -59,5 +61,20 @@ export class TaskModel {
     return newTask
   }
 
-  public updateTask (): void {}
+  public updateTask (id: number, body: Task): Task[] {
+    const index = data.findIndex(obj => obj.id === id)
+    if (index === -1) {
+      throw new Error('No se encontro ninguna tarea con ese id')
+    }
+    const updateTask = data.map(obj => {
+      if (obj.id === id) {
+        return {
+          ...obj,
+          ...body
+        }
+      }
+      return obj
+    })
+    return updateTask
+  }
 }

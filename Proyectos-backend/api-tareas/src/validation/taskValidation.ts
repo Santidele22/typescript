@@ -1,9 +1,23 @@
 import { z } from 'zod'
+import { DateFormatted, NewTask } from '../types/types'
 
-const taskValidation = z.object({
+const taskSchema = z.object({
   author: z.string().max(50),
-  date: z.string().date().min(new Date('1950-01-01'), { message: 'Too old' }).max(new Date(), { message: 'Too young!' }),
+  date: z.string().transform(value => {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+    if (!dateRegex.test(value)) {
+      throw new Error('La fecha debe estar en el formato YYYY-MM-DD')
+    }
+    return value as DateFormatted
+  }),
   task: z.string().max(100),
   done: z.boolean()
 })
-export default taskValidation
+function validateTask (input: NewTask): any {
+  return taskSchema.safeParse(input)
+}
+function validatePartialtask (input: NewTask): any {
+  return taskSchema.partial().safeParse(input)
+}
+export { validatePartialtask, validateTask }
+
