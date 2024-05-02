@@ -1,6 +1,6 @@
+import crypto from 'node:crypto'
 import taskInfo from '../../data/data.json'
 import { NewTask, Task } from '../../types/types'
-
 const data: Task[] = taskInfo as Task[]
 
 export class TaskModel {
@@ -27,7 +27,7 @@ export class TaskModel {
     }
   }
 
-  public getTaskById (id: number): Task | undefined {
+  public getTaskById (id: string): Task | undefined {
     try {
       const task = data.find(task => task.id === id)
 
@@ -38,7 +38,7 @@ export class TaskModel {
     }
   }
 
-  public deleteTask (id: number): Task[] | undefined {
+  public deleteTask (id: string): Task[] | undefined {
     try {
       const index = data.findIndex(task => task.id === id)
       let deletedTask
@@ -54,14 +54,14 @@ export class TaskModel {
 
   public createTask (newTaskEntry: NewTask): Task {
     const newTask: Task = {
-      id: Math.max(...data.map(d => d.id)) + 1,
+      id: crypto.randomUUID(),
       ...newTaskEntry
     }
     data.push(newTask)
     return newTask
   }
 
-  public updateTask (id: number, body: Task): Task[] {
+  public updateTask (id: string, body: Task): Task[] {
     const index = data.findIndex(obj => obj.id === id)
     if (index === -1) {
       throw new Error('No se encontro ninguna tarea con ese id')
